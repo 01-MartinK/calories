@@ -6,13 +6,15 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <script src="https://kit.fontawesome.com/277d889efd.js" crossorigin="anonymous"></script>
         <title>Patterns</title>
+        <link rel='stylesheet' href="main.css">
     </head>
     <body>
         <!-- navbar -->
         <nav>
-            <div class="nav-wrapper blue">
+            <div class="nav-wrapper teal lighten-2">
                 <div class="container">
                     <a href="#" class="brand-logo center">Track calories</a>
+                    <button class="clear-btn btn blue lighten-3">Clear All</button>
                 </div>
             </div>
         </nav>
@@ -20,7 +22,7 @@
         <br>
 
         <div class="container">
-            <div class="card">
+            <div class="card add-window">
                 <div class="card-content">
                     <span class="card-title">Add Meal / Food Item</span>
                     <form class="col">
@@ -33,12 +35,34 @@
                                 <input type="text" placeholder="Add Calories" id="item-calories">
                                 <label for="item-calories">Calories</label>
                             </div>
-                            <button class="add-btn btn blue darken-3"><i class="fa fa-plus">Add Meal</i></button>
+                            <button class="add-btn btn green darken-3"><i class="fa fa-plus">Add Meal</i></button>
                         </div>
                     </form>
                 </div>
             </div>
-        
+
+            <div class="edit-window">
+                <div class="card">
+                    <div class="card-content">
+                        <span class='card-title'>Edit Meal</span>
+                        <form class="col">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" placeholder="Steak" id="item-edit-name">
+                                    <label for="item-name">Name</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="text" placeholder="192 Calories" id="item-edit-calories">
+                                    <label for="item-calories">Calories</label>
+                                </div>
+                                <button id="update-meal-button" class="add-btn btn orange darken-3"><i class="fa fa-edit"></i> Update Meal</button>
+                                <button id="delete-meal-button" class="add-btn btn red darken-3"><i class="fa fa-minus"></i> Delete Meal</button>
+                                <button class="btn blue" id="edit-back-button">Back -></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
         <!-- Calorie Count -->
         <h3 class="center-align">Total Calories: <span class="total-calories">0</span></h3>
