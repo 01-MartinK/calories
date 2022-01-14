@@ -51,13 +51,23 @@ const ItemCtrl = (function(){
 			//{id: 1, name: 'Cookie', calories: 400},
 			//{id: 2, name: 'Eggs', calories: 300},
 		],
-		total: 0
+		total: 0,
+        currItem: null
 	}
 
 	return {
 		getItems: function(){
 			return data.items
 		},
+        setItems: function(newList){
+            data.items = newList
+        },
+        setCurrItem: function(id){
+            data.currItem = id
+        },
+        getCurrItem: function(id){
+            return data.currItem
+        },
 		addItem: function(name, calories){
 			let id = 0;
 			// create id
@@ -88,7 +98,27 @@ const ItemCtrl = (function(){
 		},
 		logData: function(){
 			return data
-		}
+		},
+        deleteItem: function(itemID){
+            const itemList = this.getItems()
+            let newList = []
+            
+            // check if not the item we want
+            itemList.forEach(function(item){
+                if (item.id !== itemID){
+                    newList.push(item)
+                }
+            })
+            this.setItems(newList)
+            UICtrl.populateItemList(newList)
+            UICtrl.showTotalCalories(this.getTotalCalories())
+            
+            StorageCtrl.clearLS()
+            newList.forEach(function(item){
+                StorageCtrl.storeItem(item)
+            })
+
+        }
 	}
 })();
 
@@ -104,7 +134,9 @@ const UICtrl = (function(){
 		totalCalories: '.total-calories',
 		clearBtn: '.clear-btn',
 		editBtns: '.edit-btns',
-		backBtn: '.back-btn'
+		backBtn: '.back-btn',
+        deleteBtn: '.del-btn',
+        updateBtn: 'update-btn'
 	}
 
 	return {
@@ -173,16 +205,35 @@ const UICtrl = (function(){
 				item = event.target.parentElement.parentElement.id
 				items = StorageCtrl.getItemsFromStorage()
 				selectedItem = items[item.slice(5)]
+                ItemCtrl.setCurrItem(parseInt(item.slice(5)))
 				document.querySelector(UISelectors.itemNameInput).value = selectedItem.name;
 				document.querySelector(UISelectors.itemCaloriesInput).value = selectedItem.calories;
-			}
+                currItem = ItemCtrl.getItems()
+            }
 		},
         // go back
 		backUI: function(){
 			document.querySelector(UISelectors.editBtns).classList.add('hidden');
 			document.querySelector(UISelectors.addBtn).classList.remove('hidden');
 			UICtrl.clearInput();
-		}
+		},
+        requestDelete: function(event){
+            console.log('requestingDelete')
+            
+            let current = ItemCtrl.getCurrItem()
+            console.log(current)
+            ItemCtrl.deleteItem(current)
+
+            // head back
+            document.querySelector(UISelectors.editBtns).classList.add('hidden');
+			document.querySelector(UISelectors.addBtn).classList.remove('hidden');
+			UICtrl.clearInput();
+
+            console.log('deleted')
+        },
+        requestEdit: function(event){
+            
+        }
 	}
 })();
 
@@ -204,7 +255,9 @@ const App = (function(ItemCtrl, StorageCtrl, UICtrl){
 
 		document.querySelector(UISelectors.itemList).addEventListener('click', UICtrl.hideShowBtns)
 		document.querySelector(UISelectors.backBtn).addEventListener('click', UICtrl.backUI)
-	}
+	
+        document.querySelector(UISelectors.deleteBtn).addEventListener('click',UICtrl.requestDelete)
+    }
 	// add item submit
 	const itemAddSubmit = function(event){
 		// get form input from UI controller
