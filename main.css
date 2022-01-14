@@ -2,6 +2,10 @@
     display: none;
 } 
 
+#back-button{
+    float: right;
+} 
+
 .add-window {
     display: block;
 }

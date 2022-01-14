@@ -95,7 +95,7 @@ const UICtrl = (function(){
         editBtn: "#edit-btn",
         updateBtn: "#update-meal-button",
         deleteBtn: "#delete-meal-button",
-        backBtn: "#edit-back-button",
+        backBtn: "#back-button",
         clearBtn: ".clear-btn",
         itemNameInput: "#item-name",
         itemNameEditInput: "#item-edit-name",
@@ -119,7 +119,7 @@ const UICtrl = (function(){
                 <a href="#" class="secondary-content" id="edit-btn">
                 <i class="edit-item fa fa-pencil"></i>
                 </a>
-                </li>    
+                </li>
                 `
             });
 
@@ -153,19 +153,30 @@ const App = (function(ItemCtrl, StorageCtrl, UICtrl){
         document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit)
         document.addEventListener('DOMContentLoaded', getItemsFromStorage)
         document.querySelector(UISelectors.clearBtn).addEventListener('click',itemsClearList)
-
-        const editable = document.querySelectorAll(UISelectors.editBtn)
-
-        for (let i = 0; i < editable.length; i++) {
-            editable[i].addEventListener('click', itemEditRequest)
-            editable[i].click()
-        }
-        console.log(document.querySelectorAll(UISelectors.editBtn))
+        document.querySelector(UISelectors.backBtn).addEventListener('click',headBack)
     } 
 
+    // request item edit
     const itemEditRequest = function(event){
+
+        const UISelectors = UICtrl.getSelectors()
+        console.log(event)
         console.log("Requested edit")
+
+        document.querySelector(UISelectors.addWindow).style.display = "none";
+        document.querySelector(UISelectors.editWindow).style.display = "block";
+
+
+        event.preventDefault()
     }
+
+    // head back to adding when promted
+    const headBack = function(event){
+        const UISelectors = UICtrl.getSelectors()
+
+        document.querySelector(UISelectors.addWindow).style.display = "block";
+        document.querySelector(UISelectors.editWindow).style.display = "none";
+    }  
 
     // itemAdd submit function
     const itemAddSubmit = function(event){
@@ -184,11 +195,11 @@ const App = (function(ItemCtrl, StorageCtrl, UICtrl){
             UICtrl.clearInput();
 
         } 
-
         
         const items = ItemCtrl.getItems()
 
         UICtrl.populateItemList(items)
+        updateEventListeners()
 
         event.preventDefault()
     } 
@@ -220,6 +231,20 @@ const App = (function(ItemCtrl, StorageCtrl, UICtrl){
         UICtrl.showTotalCalories(totalCalories);
 
         UICtrl.populateItemList(items)
+        updateEventListeners()
+    } 
+
+    // update edit button event listeners for reasons
+    const updateEventListeners = function(){
+        const UISelectors = UICtrl.getSelectors()
+
+        // get all a tags
+        const editables = document.querySelectorAll(UISelectors.editBtn)
+
+        // add event listener
+        editables.forEach(function(element){
+            element.addEventListener('click',itemEditRequest)
+        })
     } 
 
     return{
